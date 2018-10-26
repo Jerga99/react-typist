@@ -81,6 +81,9 @@ export default class Typist extends Component {
 
   componentWillUnmount() {
     this.mounted = false;
+    if (this.timeouts) {
+      this.timeouts.map(timeout => clearTimeout(timeout))
+    }
   }
 
   onTypingDone = () => {
@@ -145,7 +148,8 @@ export default class Typist extends Component {
       const textLines = this.state.textLines.slice();
 
       utils.sleep(this.introducedDelay)
-      .then(() => {
+      .then((timeout) => {
+        this.timeouts.push(timeout);
         this.introducedDelay = null;
 
         const isBackspace = character === '🔙';
